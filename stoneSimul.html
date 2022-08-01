@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>돌깎기</title>
+
+    <style>
+        #box{
+			width: 15px;
+			height: 15px;
+			border: solid 1px grey;
+			display: inline-block;
+			margin-right: 10px;
+			margin-left: 10px;
+		}
+		
+		.line{
+			margin: 20px;
+		}
+		
+		#btn-blue{
+			width: 50px;
+			height: 50px;
+			border: solid 1px blue;
+			background-color: white;
+			margin-left: 20px;
+		}
+		
+		#btn-red{
+			width: 50px;
+			height: 50px;
+			border: solid 1px red;
+			background-color: white;
+			margin-left: 20px;
+		}
+		
+		span{
+			width: 100px;
+			text-align: left;
+			margin-right: 20px;
+		}
+		
+		h5{
+			text-align: right;
+		}
+    </style>
+</head>
+<body>
+    <div style="width: 600px">
+		<h3>&nbsp; 돌깎기 시뮬레이션</h3>
+		<br><hr><br>
+		
+		<h5></h5>
+		<div class="line" id="line1">
+			<span>원한</span>				
+		</div>
+		<div class="line" id="line2">
+			<span>예둔</span>
+		</div>
+		<div class="line" id="line3">
+			<span>방감</span>
+		</div>
+		
+		<input id="retry" type="button" value="다시하기" style="margin: 0 auto; display: block"/>
+	</div>
+	
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script type="text/javascript">
+
+		var box = "<div id='box'></div>";
+		for(var i = 0; i < 10; i++){
+			$("#line1").append(box);
+			$("#line2").append(box);
+			$("#line3").append(box);
+		}
+		
+		$("#line1").children("#box").css("border", "solid 1px blue").css("transform", "rotate(45deg)");
+		$("#line2").children("#box").css("border", "solid 1px blue").css("transform", "rotate(45deg)");
+		$("#line3").children("#box").css("border", "solid 1px red").css("transform", "rotate(45deg)");
+	
+		$("#line1").append("<input type='button' id='btn-blue' value='세공'>");
+		$("#line2").append("<input type='button' id='btn-blue' value='세공'>");
+		$("#line3").append("<input type='button' id='btn-red' value='세공'>");
+		
+		var result = false;	
+		var current = 75;
+		
+		$("h5").html("성공확률: " + current + "%");
+		function f_random(percent){
+			var no = Math.floor(Math.random()*100 + 1);
+			return (no <= percent);
+		}
+		
+		function f_success(){
+			if(current - 10 < 25){
+				current = 25;
+			}else{
+				current -= 10;
+			}
+			$("h5").html("성공확률: " + current + "%");
+		}
+		
+		function f_fail(){
+			if(current + 10 > 75){
+				current = 75;
+			}else{
+				current += 10;
+			}
+			$("h5").html("성공확률: " + current + "%");
+		}
+		
+		var v_idx1 = 0;
+		var v_idx2 = 0;
+		var v_idx3 = 0;
+		
+		function f_reset(){
+			v_idx1 = 0;
+			v_idx2 = 0;
+			v_idx3 = 0;
+			
+			current = 75;
+			$("h5").html("성공확률: " + current + "%");
+			
+			$("#line1").children("#box").css("backgroundColor", "white");
+			$("#line2").children("#box").css("backgroundColor", "white");
+			$("#line3").children("#box").css("backgroundColor", "white");
+		}
+		
+		var v_fail = "rgb(128, 128, 128)";
+		function f_finish(){
+			if(v_idx1 + v_idx2 + v_idx3 >= 30){
+				var count1 = 0;
+				var count2 = 0;
+				var count3 = 0;
+				for(var i = 0; i < 10; i++){
+					var color = $("#line1").children("#box").eq(i).css("backgroundColor");
+					if(color != v_fail){
+						count1++;					
+					}
+					color = $("#line2").children("#box").eq(i).css("backgroundColor");
+					if(color != v_fail){
+						count2++;					
+					}
+					color = $("#line3").children("#box").eq(i).css("backgroundColor");
+					if(color != v_fail){
+						count3++;					
+					}
+				}
+				
+				alert("원한: " + count1 + "\n예둔: " + count2 + "\n방감: " + count3);
+			}
+		}
+		
+		$("#retry").click(function(){
+			f_reset();
+		});
+		
+		$("#line1").children("#btn-blue").click(function(){
+			if(v_idx1 >= 10){
+				return;
+			}
+			
+			result = f_random(current);
+			
+			if(result){
+				$("#line1").children("#box").eq(v_idx1).css("backgroundColor", "blue");
+				f_success();
+			}else{
+				$("#line1").children("#box").eq(v_idx1).css("backgroundColor", "grey");
+				f_fail();
+			}
+			
+			v_idx1++;
+			setTimeout(f_finish, 10);
+		});
+		$("#line2").children("#btn-blue").click(function(){
+			if(v_idx2 >= 10){
+				return;
+			}
+			
+			result = f_random(current);
+			
+			if(result){
+				$("#line2").children("#box").eq(v_idx2).css("backgroundColor", "blue");
+				f_success();
+			}else{
+				$("#line2").children("#box").eq(v_idx2).css("backgroundColor", "grey");
+				f_fail();
+			}
+			
+			v_idx2++;
+			setTimeout(f_finish, 10);
+		});
+		$("#btn-red").click(function(){
+			if(v_idx3 >= 10){
+				return;
+			}
+			
+			result = f_random(current);
+			
+			if(result){
+				$("#line3").children("#box").eq(v_idx3).css("backgroundColor", "red");
+				f_success();
+			}else{
+				$("#line3").children("#box").eq(v_idx3).css("backgroundColor", "grey");
+				f_fail();
+			}
+			
+			v_idx3++;
+			setTimeout(f_finish, 10);
+		});
+		
+		
+	</script>
+</body>
+</html>
