@@ -61,8 +61,8 @@
 <body>
     <div id="container">
         <div id="background">
-            <img src="../resources/image/clouds.png" alt="" width="1400" height="300" class="clouds">
-            <img src="../resources/image/clouds.png" alt="" width="1400" height="300" class="clouds">
+            <img src="./img/clouds.png" alt="" width="1400" height="300" class="clouds">
+            <img src="./img/clouds.png" alt="" width="1400" height="300" class="clouds">
         </div>
         <div id="character">
             <div id="megaman"></div>
@@ -131,7 +131,7 @@
                 return;
             }
             clearTimeout(v_running);
-            v_mega.style.background = "url('../resources/image/megaman.png') no-repeat -1023px -7px";
+            v_mega.style.background = "url('./img/megaman.png') no-repeat -1023px -7px";
             v_mega.style.width = "205px";
             v_mega.style.height = "236px";
 
@@ -167,15 +167,15 @@
         const v_mega = document.getElementById("megaman");
         let v_running = null;
         const runArray = [{
-            "background" : "url('../resources/image/megaman.png') no-repeat -21px -325px",
+            "background" : "url('./img/megaman.png') no-repeat -21px -325px",
             "width" : "191px",
             "height" : "172px"
         }, {
-            "background" : "url('../resources/image/megaman.png') no-repeat -300px -308px",
+            "background" : "url('./img/megaman.png') no-repeat -300px -308px",
             "width" : "129px",
             "height" : "191px"
         }, {
-            "background" : "url('../resources/image/megaman.png') no-repeat -525px -325px",
+            "background" : "url('./img/megaman.png') no-repeat -525px -325px",
             "width" : "166px",
             "height" : "174px"
         }];
@@ -228,7 +228,7 @@
         let createSpeed = 3000;
         function f_create(){
             const v_img = document.createElement("img");
-            v_img.src = "../resources/image/spike.png";
+            v_img.src = "./img/spike.png";
             v_img.setAttribute("width", "80");
             v_img.setAttribute("height", "120");
             v_img.setAttribute("position", "absolute");
@@ -276,9 +276,9 @@
             v_score++;
             document.getElementById("score").innerHTML = (v_score) * 100;
             // 1000점 이상이면 속도 증가
-            if(v_score > 10){
+            if(v_score >= 10){
                 v_speedT = 20;
-                createSpeed = 2500;
+                createSpeed = 2200;
             }
 
             setTimeout(f_timer, 5000);
