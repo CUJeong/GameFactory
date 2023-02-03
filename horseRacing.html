@@ -68,8 +68,8 @@
     
         </div> <!--End of container_inner-->
 
-        <div style="margin-top: 30px;">
-            <table>
+        <div style="margin-top: 30px; display: flex">
+            <table id="teamTable" style="display: inline-block;">
                 <tr>
                     <th>팀 (포인트)</th>
                     <th>배팅할 말의 번호</th>
@@ -102,7 +102,7 @@
                         <input type="text" name="teamBet">
                     </td>
                 </tr>
-                <!-- <tr>
+                <tr>
                     <td name="teamName"></td>
                     <td>
                         <input type="text" name="betHorse">
@@ -110,8 +110,13 @@
                     <td>
                         <input type="text" name="teamBet">
                     </td>
-                </tr> -->
+                </tr>
             </table>
+
+            <div id="teamButton" style="display: inline-block; top: 50px;">
+                <input type="button" value="팀추가" onclick="addTeam()">
+                <input type="button" value="팀삭제" onclick="delTeam()">
+            </div>
         </div>
 
         <div style="margin-top: 30px;">
@@ -125,35 +130,47 @@
 
 
     <script>
+        createTeam();
+        
+        
         // 팀 데이터 생성(로컬 스토리지)
-        v_tblName = "UserDB";
-        v_datas = []; // 전체 json을 담을 빈 배열 생성
+        function createTeam(){
+            const v_teams = document.getElementsByName("teamName");
+            
+            v_tblName = "UserDB";
+            v_datas = []; // 전체 json을 담을 빈 배열 생성
 
-        var v_user = {};
-        v_user.name = "1팀"; // 이름
-        v_user.point = 1000;
-        v_user.horse = 0; // 베팅한 말 번호
-        v_datas.push(v_user);
+            for(let i = 0; i < v_teams.length; i++){
+                var v_user = {};
+                v_user.name = (i+1) + "팀"; // 이름
+                v_user.point = 1000;
+                v_user.horse = 0; // 베팅한 말 번호
+                v_datas.push(v_user);
+            }
+            
+            localStorage.setItem(v_tblName, JSON.stringify(v_datas));
+        }
 
-        v_user = {};
-        v_user.name = "2팀"; // 이름
-        v_user.point = 1000;
-        v_user.horse = 0; // 베팅한 말 번호
-        v_datas.push(v_user);
 
-        v_user = {};
-        v_user.name = "3팀"; // 이름
-        v_user.point = 1000;
-        v_user.horse = 0; // 베팅한 말 번호
-        v_datas.push(v_user);
-        v_user = {};
+        function addTeam(){
+            let v_teamTable = document.getElementById("teamTable");
 
-        // v_user.name = "4팀"; // 이름
-        // v_user.point = 1000;
-        // v_user.horse = 0; // 베팅한 말 번호
-        // v_datas.push(v_user);
+            v_teamTable.innerHTML += "<tr><td name='teamName'></td><td><input type='text' name='betHorse'></td><td><input type='text' name='teamBet'></td></tr>";
+            createTeam();
+            initTeamState();
+        }
 
-        localStorage.setItem(v_tblName, JSON.stringify(v_datas));
+        function delTeam(){
+            const v_teams = document.getElementsByName("teamName");
+
+            if(v_teams.length == 1){
+                return;
+            }
+
+            v_teams[v_teams.length-1].parentNode.remove();
+            createTeam();
+            initTeamState();
+        }
 
 
         // 말들 목록 가져옴
@@ -310,6 +327,11 @@
 
         // 레이스 시작
         function startRace(){
+            let v_teamButton = document.getElementById("teamButton");
+            if(v_teamButton){
+                teamButton.remove();
+            }
+
             var v_userDatas = JSON.parse(localStorage.getItem(v_tblName));
             var betHorseList = document.getElementsByName("betHorse");
             
