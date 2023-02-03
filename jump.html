@@ -117,6 +117,25 @@
                 }
 			}
         }, true);
+	    
+	window.onload = function() {
+            document.body.onclick = function(evt) {
+                if(!isJump){
+                    isJump = true;
+                    jumpCount = 1;
+                    t = 0;
+                    f_jump();
+                }else{
+                    if(jumpCount == 1){
+                        t = 0;
+                        jumpCount = 2;
+                        currentTop = parseInt(v_me.style.top);
+                        clearTimeout(oneJumpTimer);
+                        f_doubleJump();
+                    }
+                }
+            } 
+        }
 
         let currentTop = 0;
 
@@ -146,7 +165,7 @@
         function f_doubleJump(){
             y = v*t - (0.5*g*t*t);
 
-            const temp = -1 * parseInt(y);
+            const temp = -1 * parseInt(y * 0.7);
             const v_height = parseInt(v_me.style.top);
 
             if(t != 0 && y <= 0 && v_height >= initTop){
@@ -279,7 +298,7 @@
             // 1000점 이상이면 속도 증가
             if(v_score >= 10){
                 v_speedT = 20;
-                createSpeed = 2200;
+                createSpeed = 2400;
             }
 
             setTimeout(f_timer, 5000);
