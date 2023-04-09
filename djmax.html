@@ -29,8 +29,8 @@
 
 		#result {
 			position: absolute;
-			left: 50%;
-			top: 40%;
+			left: 30%;
+			top: 30%;
 			width: 40%;
 			height: 30%;
 			z-index: 10;
@@ -39,6 +39,10 @@
 			opacity: 1;
 			display: none;
 			pointer-events: none;
+		}
+
+		.alignCenter{
+			text-align: center;
 		}
 		
 		#gameBoard {
@@ -164,10 +168,10 @@
 	</div>
 
 	<div id="result">
-		<div><h2>게임 결과</h2></div>
-		<div>
+		<div class="alignCenter"><h1>게임 결과</h1></div>
+		<div class="alignCenter">
 			<img alt="" src="./img/coupon.png" width="80" height="40">
-			<p id="resultCoupon"></p>
+			<h2 id="resultCoupon" class="alignCenter"></h2>
 		</div>
 	</div>
 	
