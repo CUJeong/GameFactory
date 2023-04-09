@@ -29,11 +29,13 @@
 
 		#result {
 			position: absolute;
-			left: 1%;
-			top: 1%;
-			width: 98%;
-			height: 98%;
+			left: 50%;
+			top: 40%;
+			width: 40%;
+			height: 30%;
 			z-index: 10;
+			background-color: white;
+			border: 2px solid black;
 			opacity: 1;
 			display: none;
 			pointer-events: none;
@@ -238,6 +240,7 @@
 				setTimeout(function(){
 					// 게임 끝
 					$("#result").css("display", "block");
+					$("#resultCoupon").html(v_dataCount + "/40");
 				}, 4500);
 				
 				return;
