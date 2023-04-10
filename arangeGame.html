@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>정리 게임</title>
+
+    <style>
+        .box{
+            display: flex;
+            border: 2px solid black;
+            padding: 0;
+        }
+
+        .lane{
+            text-align: center;
+            display: inline-block;
+            border: 1px solid black;
+            margin: 0;
+            width: 200px;
+        }
+
+        .vcenter{
+            vertical-align: middle;
+            margin-top: 15%;
+        }
+
+        .bg_red{
+            background-color: indianred;
+        }
+
+        .target_img{
+            margin: 5px;
+        }
+
+    </style>
+</head>
+<body>
+    <div>
+        <div class="box" style="width: 600px; height: 600px;">
+            <div class="lane" style="width: 100px; display: flex; justify-content:center; align-items: end;">
+                <div>
+                    <img class="target_img" src="./img/oracle_icon.png" width="80" height="80">
+                    <img class="target_img" src="./img/java_icon.png" width="80" height="80">
+                </div>
+            </div>
+            <div class="lane" style="width: 200px; display: flex; justify-content:center; align-items: end;" >
+                <div id="jobs" style="width: 100px;">
+
+                </div>
+            </div>
+            <div class="lane" style="width: 100px; display: flex; justify-content:center; align-items: end;">
+                <div>
+                    <img class="target_img" src="./img/spring_icon.png" width="80" height="80">
+                    <img class="target_img" src="./img/javascript_icon.png" width="80" height="80">
+                </div>
+            </div>
+            <div class="lane" style="width: 200px;">
+                <div>
+                    <h1>소지금: <br><span id="moneyView">100</span>만</h1>
+                </div>
+                <div>
+                    <img id="stateImage" src="./img/good.png" width="180" height="140">
+                </div>
+                <div>
+                    <h1 id="comboView" style="font-family: 'Nanum Pen Script', cursive;"></h1>
+                </div>
+                <div>
+                    <h1 id="plusMoneyView" style="font-family: 'Nanum Pen Script', cursive;"></h1>
+                </div>
+            </div>
+        </div>
+        <div class="box" style="width: 400px; height: 100px;">
+            <div class="lane">
+                <h2 class="vcenter" onclick="f_click(0)">왼쪽</h2>
+            </div>
+            <div class="lane">
+                <h2 class="vcenter" onclick="f_click(1)">오른쪽</h2>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let v_java = {img: "./img/java_icon.png", ans: 0};
+        let v_javascript = {img: "./img/javascript_icon.png", ans: 1};
+        let v_oracle = {img: "./img/oracle_icon.png", ans: 0};
+        let v_spring = {img: "./img/spring_icon.png", ans: 1};
+
+        let v_items = [];
+        v_items.push(v_java);
+        v_items.push(v_javascript);
+        v_items.push(v_oracle);
+        v_items.push(v_spring);
+
+        const v_jobs = document.getElementById("jobs");
+
+        let v_lanes = [];
+
+        for(let i = 0; i < 7; i++){
+            const v_randIdx = Math.floor(Math.random() * v_items.length);
+            v_lanes.push(v_items[v_randIdx]);
+        }
+
+        for(let i in v_lanes){
+            v_jobs.innerHTML = "<img class='target_img' src='" + v_lanes[i].img + "' width='80' height='80'>" + v_jobs.innerHTML;
+        }
+
+        let v_numCombo = 0;           // 콤보 진행수
+        let v_isCombo = false;        // 현재 콤보 진행중인지
+        let v_timer = 0;
+
+        const v_stateImage = document.getElementById("stateImage");
+        const v_moneyView = document.getElementById("moneyView");
+        const v_comboView = document.getElementById("comboView");
+        v_jobs.lastChild.remove();  // 맨 처음 한번 끝에 자식 제거해야 의도대로 동작함
+        function f_click(num){
+            // 맨 밑에 놓인게 v_jobs의 마지막 자식
+            // v_lanes의 첫번째 인덱스
+
+            // 잘 맞춤
+            if(v_lanes[0].ans == num){
+                v_stateImage.src = "./img/good.png";
+                let temp = new Date().getTime();
+                if(v_isCombo && temp - v_timer < 1000){
+                    v_numCombo++;
+                    v_comboView.innerHTML = "Combo:" + v_numCombo;
+                }else{
+                    v_numCombo = 0;
+                    v_comboView.innerHTML = "";
+                }
+                v_timer = new Date().getTime();
+                v_isCombo = true;
+                f_plusMoney();
+            }else{
+                v_stateImage.src = "./img/bad.png";
+                v_isCombo = false;
+                v_numCombo = 0;
+                v_comboView.innerHTML = "";
+                v_plusMoneyView.innerHTML = "";
+            }
+            v_lanes.splice(0, 1);
+            f_add();
+            v_jobs.lastChild.remove();
+        }
+
+        function f_add(){
+            const v_randIdx = Math.floor(Math.random() * v_items.length);
+            v_lanes.push(v_items[v_randIdx]);
+            v_jobs.innerHTML = "<img class='target_img' src='" + v_items[v_randIdx].img + "' width='80' height='80'>" + v_jobs.innerHTML;
+        }
+
+        window.addEventListener("keydown", function (event) {
+			if(event.keyCode == "37"){
+                f_click(0);
+			}else if(event.keyCode == "39"){
+                f_click(1);
+			}
+        }, true);
+
+        // 콤보에 맞게 돈이 오름
+        const v_plusMoneyView = document.getElementById("plusMoneyView");
+        function f_plusMoney(){
+
+            if(v_numCombo > 30){
+                moneyView.innerHTML = parseInt(moneyView.innerHTML) + 300;
+                v_plusMoneyView.innerHTML = "+300만";
+            }else if(v_numCombo > 20){
+                moneyView.innerHTML = parseInt(moneyView.innerHTML) + 200;
+                v_plusMoneyView.innerHTML = "+200만";
+            }else{
+                moneyView.innerHTML = parseInt(moneyView.innerHTML) + 100;
+                v_plusMoneyView.innerHTML = "+100만";
+            }
+
+        }
+
+
+    </script>
+</body>
+</html>
